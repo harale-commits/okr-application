@@ -12,6 +12,7 @@ function App() {
   useEffect(() => {
     (async () => {
       const resolvedPromiseData: ObjectiveType[] = await getOKRObjectives();
+      console.log("frontend object", resolvedPromiseData);
       setObjectives(resolvedPromiseData);
     })();
   }, []);

@@ -1,15 +1,11 @@
-import { ObjectiveType } from "../types/okr-types";
+import { InsertOKRObjectiveType, ObjectiveType } from "../types/okr-types";
+import { v4 as uuidv4 } from "uuid";
 
-let dbIndex = 1;
-let db = new Map<number, ObjectiveType>();
+let db = new Map<string, ObjectiveType>();
 
-type OKRObjectives = ObjectiveType & {
-  id: number;
-};
-
-let OKRObjectives: OKRObjectives[] = [
+let OKRObjectives: ObjectiveType[] = [
   {
-    id: dbIndex++,
+    id: uuidv4(),
     title: "Hire Devs",
     keyresults: [
       {
@@ -27,11 +23,14 @@ OKRObjectives.forEach((objective) => {
   db.set(objective.id, objective);
 });
 
-export const insertOKRObjectives = (newOKR: ObjectiveType): Promise<void> => {
+export const insertOKRObjectives = (newOKR: InsertOKRObjectiveType): Promise<ObjectiveType> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      db.set(dbIndex++, newOKR);
-      resolve();
+      const newObjectiveID = uuidv4();
+      const newOKRToBeAddedInDB = { id: newObjectiveID, ...newOKR };
+      console.log(newOKRToBeAddedInDB);
+      db.set(uuidv4(), newOKRToBeAddedInDB);
+      resolve(newOKRToBeAddedInDB);
     }, 3000);
   });
 };

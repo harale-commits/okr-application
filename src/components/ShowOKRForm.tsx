@@ -50,12 +50,23 @@ export default function ShowOKRForm({
                       "border-1 bg-red-400 p-2 text-sm text-white rounded-md uppercase font-semibold  hover:bg-red-600  "
                     }
                     onClick={() => {
+                        
+                    }}
+                  >
+                    Update
+                  </button>
+
+                  <button
+                    className={
+                      "border-1 bg-red-400 p-2 text-sm text-white rounded-md uppercase font-semibold  hover:bg-red-600  "
+                    }
+                    onClick={() => {
                       objectives.splice(index, 1);
 
                       setObjectives([...objectives]);
                     }}
                   >
-                    Remove
+                    Delete Objective
                   </button>
                 </div>
               </li>

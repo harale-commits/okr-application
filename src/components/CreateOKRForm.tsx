@@ -2,6 +2,7 @@ import { useState } from "react";
 import { KeyResultType, ObjectiveType } from "../types/okr-types";
 import { insertOKRObjectives } from "../data/okr-data";
 
+
 const emptyKeyResult = {
   title: "",
   initialValue: 0,
@@ -37,14 +38,8 @@ export default function CreateOKRForm({
       title: newObjective,
       keyresults: [...keyResults],
     };
-    insertOKRObjectives(newOKR).then(() => {
-      setObjectives([
-        ...objectives,
-        {
-          title: newObjective,
-          keyresults: [...keyResults],
-        },
-      ]);
+    insertOKRObjectives(newOKR).then((data) => {
+      setObjectives([...objectives, data]);
 
       resetKeyResults();
       resetNewObjectiveValue();

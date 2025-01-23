@@ -1,14 +1,17 @@
 type KeyResultType = {
-  title: string,
-  initialValue: number,
-  currentValue: number,
-  targetValue: number,
-  metrics: string
+  title: string;
+  initialValue: number;
+  currentValue: number;
+  targetValue: number;
+  metrics: string;
 };
 
 type ObjectiveType = {
-  title: string,
-  keyresults: KeyResultType[]
+  id: string;
+  title: string;
+  keyresults: KeyResultType[];
 };
 
-export type { KeyResultType, ObjectiveType };
+type InsertOKRObjectiveType = Omit<ObjectiveType, "id">;
+
+export type { KeyResultType, ObjectiveType, InsertOKRObjectiveType };
