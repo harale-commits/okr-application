@@ -1,25 +1,32 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ObjectiveType } from "./types/okr-types";
 import CreateOKRForm from "./components/CreateOKRForm";
 import ShowOKRForm from "./components/ShowOKRForm";
 import { getOKRObjectives } from "./data/okr-data";
 import { DotLoader } from "react-spinners";
+import {okrProviderContext} from "./providers/OkrProvider";
 
 function App() {
-  const [objectives, setObjectives] = useState<ObjectiveType[] | null>(null);
-  const isLoading = objectives === null;
+  const {objectives, setObjectives} = useContext(okrProviderContext);
+  const [isLoading, setIsLoading] = useState<boolean>(objectives === null)
+
+  const [isUpdateObjectiveFormOpen, setIsUpdateObjectiveFormOpen] =
+    useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
       const resolvedPromiseData: ObjectiveType[] = await getOKRObjectives();
       console.log("frontend object", resolvedPromiseData);
       setObjectives(resolvedPromiseData);
+      setIsLoading(false);
     })();
   }, []);
 
   return (
     <div className="flex mt-8">
       <CreateOKRForm
+        isUpdateObjectiveFormOpen={isUpdateObjectiveFormOpen}
+        setIsUpdateObjectiveFormOpen={setIsUpdateObjectiveFormOpen}
         objectives={objectives ?? []}
         setObjectives={setObjectives}
       />
@@ -31,7 +38,12 @@ function App() {
           </div>
         </div>
       ) : (
-        <ShowOKRForm objectives={objectives} setObjectives={setObjectives} />
+        <ShowOKRForm
+          objectives={objectives??[]}
+          setObjectives={setObjectives}
+          isUpdateObjectiveFormOpen={isUpdateObjectiveFormOpen}
+          setIsUpdateObjectiveFormOpen={setIsUpdateObjectiveFormOpen}
+        />
       )}
     </div>
   );

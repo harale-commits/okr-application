@@ -1,14 +1,19 @@
 import { useState } from "react";
 import { ObjectiveType } from "../types/okr-types";
 import AddKeyResultModal from "./AddKeyResultModal";
+import UpdateOKRForm from "./UpdateOKRForm";
 
 type ShowOKRFormPropType = {
   objectives: ObjectiveType[];
   setObjectives: React.Dispatch<React.SetStateAction<ObjectiveType[] | null>>;
+  isUpdateObjectiveFormOpen: boolean;
+  setIsUpdateObjectiveFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 export default function ShowOKRForm({
   objectives: objectives,
   setObjectives: setObjectives,
+  isUpdateObjectiveFormOpen,
+  setIsUpdateObjectiveFormOpen,
 }: ShowOKRFormPropType) {
   const [objectIndex, setObjectIndex] = useState<number>(0);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -50,7 +55,7 @@ export default function ShowOKRForm({
                       "border-1 bg-red-400 p-2 text-sm text-white rounded-md uppercase font-semibold  hover:bg-red-600  "
                     }
                     onClick={() => {
-                        
+                    //   setIsUpdateObjectiveFormOpen(true);
                     }}
                   >
                     Update
@@ -118,6 +123,14 @@ export default function ShowOKRForm({
           objectives={objectives}
           setObjectives={setObjectives}
           setIsModalOpen={setIsModalOpen}
+        />
+      )}
+      {isUpdateObjectiveFormOpen && (
+        <UpdateOKRForm
+          isUpdateObjectiveFormOpen={isUpdateObjectiveFormOpen}
+          setIsUpdateObjectiveFormOpen={setIsUpdateObjectiveFormOpen}
+          objectives={objectives ?? []}
+          setObjectives={setObjectives}
         />
       )}
     </div>
