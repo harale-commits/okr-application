@@ -1,24 +1,24 @@
 import { useState } from "react";
 import { KeyResultType, ObjectiveType } from "../types/okr-types";
+import { insertOKRObjectives } from "../data/okr-data";
 
 const emptyKeyResult = {
-    title: "",
-    initialValue: 0,
-    currentValue: 0,
-    targetValue: 0,
-    metrics: "",
+  title: "",
+  initialValue: 0,
+  currentValue: 0,
+  targetValue: 0,
+  metrics: "",
 };
 
 type CreateOKRFormPropType = {
   objectives: ObjectiveType[];
-  setObjectives: React.Dispatch<React.SetStateAction<ObjectiveType[]>>;
+  setObjectives: React.Dispatch<React.SetStateAction<ObjectiveType[] | null>>;
 };
 
 export default function CreateOKRForm({
   objectives,
   setObjectives,
 }: CreateOKRFormPropType) {
-
   const [newObjective, setNewObjective] = useState<string>("");
 
   const [keyResults, setKeyResults] = useState<KeyResultType[]>([
@@ -33,15 +33,22 @@ export default function CreateOKRForm({
   };
 
   const addObjectives = () => {
-    setObjectives([
-      ...objectives,
-      {
-        title: newObjective,
-        keyresults: [...keyResults],
-      },
-    ]);
-    resetKeyResults();
-    resetNewObjectiveValue();
+    const newOKR = {
+      title: newObjective,
+      keyresults: [...keyResults],
+    };
+    insertOKRObjectives(newOKR).then(() => {
+      setObjectives([
+        ...objectives,
+        {
+          title: newObjective,
+          keyresults: [...keyResults],
+        },
+      ]);
+
+      resetKeyResults();
+      resetNewObjectiveValue();
+    });
   };
 
   const addKeyResult = () => {
@@ -77,7 +84,7 @@ export default function CreateOKRForm({
           Key Results
         </label>
         {keyResults.map((keyResult, index) => (
-          <div className="key-result-input-area space-y-4">
+          <div key={index} className="key-result-input-area space-y-4">
             <label htmlFor="keyResults" className="uppercase font-bold">
               Add Key Result - {index + 1}
             </label>
@@ -192,7 +199,7 @@ export default function CreateOKRForm({
       <div className="max-w-xl mx-auto pt-6">
         <button
           className={
-            " bg-gray-400 p-3 hover:bg-gray-500 text-white rounded-lg w-full uppercase font-semibold"
+            " bg-blue-400 p-3 hover:bg-blue-500 text-white rounded-lg w-full uppercase font-semibold"
           }
           onClick={addObjectives}
         >
