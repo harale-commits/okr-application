@@ -98,7 +98,7 @@ export default function CreateOKRForm({ isUpdateObjectiveFormOpen,
           }
           onClick={addObjectives}
         >
-          <span>Add Objective</span>
+          <span>Add Objective From Here</span>
         </button>
       </div>
 
