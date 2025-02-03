@@ -1,26 +1,30 @@
-import { useState } from "react";
-import { ObjectiveType } from "../types/okr-types";
+import {useContext, useState} from "react";
 import AddKeyResultModal from "./AddKeyResultModal";
 import UpdateOKRForm from "./UpdateOKRForm";
+import {okrProviderContext} from "../providers/OkrProvider";
+import {deleteOkrfromdb, getOKRObjectives} from "../data/okr-data.ts";
 
 type ShowOKRFormPropType = {
-  objectives: ObjectiveType[];
-  setObjectives: React.Dispatch<React.SetStateAction<ObjectiveType[] | null>>;
   isUpdateObjectiveFormOpen: boolean;
   setIsUpdateObjectiveFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
+
+
 export default function ShowOKRForm({
-  objectives: objectives,
-  setObjectives: setObjectives,
-  isUpdateObjectiveFormOpen,
-  setIsUpdateObjectiveFormOpen,
-}: ShowOKRFormPropType) {
+                                      isUpdateObjectiveFormOpen,
+                                      setIsUpdateObjectiveFormOpen,
+                                    }: ShowOKRFormPropType) {
+
+  const {objectives, setObjectives} = useContext(okrProviderContext);
+
+
   const [objectIndex, setObjectIndex] = useState<number>(0);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
+
   return (
-    <div className="mx-auto max-w-3xl border px-4 py-2 flex-grow space-y-8">
-      {objectives.length > 0 ? (
+    <div className="mx-auto max-w-3xl border px-4 py-2 flex-grow space-y-8 mt-24">
+      {objectives!.length > 0 ? (
         <h1 className="uppercase text-3xl font-bold font-mono py-8 text-center">
           Your Objectives 😃
         </h1>
@@ -28,8 +32,8 @@ export default function ShowOKRForm({
         ""
       )}
 
-      {objectives.length > 0 ? (
-        objectives.map((objective, index) => (
+      {objectives!.length > 0 ? (
+        objectives!.map((objective, index) => (
           <div key={index} className="border p-4 rounded-md">
             <ul className="list-disc pl-4">
               <li className="flex">
@@ -55,7 +59,7 @@ export default function ShowOKRForm({
                       "border-1 bg-red-400 p-2 text-sm text-white rounded-md uppercase font-semibold  hover:bg-red-600  "
                     }
                     onClick={() => {
-                    //   setIsUpdateObjectiveFormOpen(true);
+                      //   setIsUpdateObjectiveFormOpen(true);
                     }}
                   >
                     Update
@@ -65,10 +69,10 @@ export default function ShowOKRForm({
                     className={
                       "border-1 bg-red-400 p-2 text-sm text-white rounded-md uppercase font-semibold  hover:bg-red-600  "
                     }
-                    onClick={() => {
-                      objectives.splice(index, 1);
-
-                      setObjectives([...objectives]);
+                    onClick={async () => {
+                      await deleteOkrfromdb(objective.id)
+                      const updatedObjectives = await getOKRObjectives();
+                      setObjectives([...updatedObjectives!]);
                     }}
                   >
                     Delete Objective
@@ -76,12 +80,15 @@ export default function ShowOKRForm({
                 </div>
               </li>
               <ul className="list-disc pl-8 space-y-3">
-                {objective.keyresults.map((keyResult, keyResultIndex) => (
+                {objective.keyResults.map((keyResult, keyResultIndex) => (
                   <li key={keyResultIndex} className="p-2">
                     <h1 className="uppercase text-xl font-bold font-mono">
                       {keyResult.title}
                     </h1>
-                    <div className="flex justify-between">
+                    <span className="pl-4 space-x-2 text-xl">
+                      Metrics:{keyResult.metrics}
+                    </span>
+                    <div className="flex justify-between text-nowrap">
                       <span className="pl-4 space-x-2 text-xl">
                         Initial:{keyResult.initialValue},
                       </span>
@@ -98,8 +105,8 @@ export default function ShowOKRForm({
                           "border-1 bg-red-400 p-2 text-sm text-white rounded-md uppercase font-semibold  hover:bg-red-600  "
                         }
                         onClick={() => {
-                          objective.keyresults.splice(keyResultIndex, 1);
-                          setObjectives([...objectives]);
+                          objective.keyResults.splice(keyResultIndex, 1);
+                          setObjectives([...objectives!]);
                         }}
                       >
                         Delete
@@ -120,7 +127,7 @@ export default function ShowOKRForm({
       {isModalOpen && (
         <AddKeyResultModal
           objectIndex={objectIndex}
-          objectives={objectives}
+          objectives={objectives!}
           setObjectives={setObjectives}
           setIsModalOpen={setIsModalOpen}
         />

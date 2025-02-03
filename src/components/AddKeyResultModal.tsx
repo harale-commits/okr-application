@@ -106,7 +106,7 @@ export default function AddKeyResultModal({
             }
             onClick={() => {
               setKeyResult(keyResult);
-              objectives[objectIndex].keyresults.push(keyResult);
+              objectives[objectIndex].keyResults.push(keyResult);
               setObjectives([...objectives]);
               setIsModalOpen(false);
             }}
@@ -115,7 +115,7 @@ export default function AddKeyResultModal({
           </button>
           <button
             className={
-              "border-1 bg-red-400 p-3 text-white rounded-lg uppercase font-semibold  hover:bg-red-600"
+              "border-1 bg-red-500 p-3 text-white rounded-lg uppercase font-semibold  hover:bg-red-600"
             }
             onClick={() => {
               setIsModalOpen(false);

@@ -4,12 +4,13 @@ type KeyResultType = {
   currentValue: number;
   targetValue: number;
   metrics: string;
+  objectiveID ?: number
 };
 
 type ObjectiveType = {
   id: string;
   title: string;
-  keyresults: KeyResultType[];
+  keyResults: KeyResultType[];
 };
 
 type InsertOKRObjectiveType = Omit<ObjectiveType, "id">;

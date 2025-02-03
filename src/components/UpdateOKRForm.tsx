@@ -39,7 +39,7 @@ export default function UpdateOKRForm({
   const addObjectives = () => {
     const newOKR = {
       title: newObjective,
-      keyresults: [...keyResults],
+      keyResults: [...keyResults],
     };
     insertOKRObjectives(newOKR).then((data) => {
       setObjectives([...objectives, data]);
