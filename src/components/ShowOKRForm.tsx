@@ -22,7 +22,7 @@ export default function ShowOKRForm({
     <div className="mx-auto max-w-3xl border px-4 py-2 flex-grow space-y-8">
       {objectives.length > 0 ? (
         <h1 className="uppercase text-3xl font-bold font-mono py-8 text-center">
-          Your Objectives 😃
+          Your Objectives are here 😃
         </h1>
       ) : (
         ""
