@@ -15,7 +15,7 @@ export function NavBar() {
   const [linkValues, setLinkValues] = useState<linkType>(initialLinkValues);
 
 
-  return <nav className="flex items-center min-h-screen fixed">
+  return <nav className="flex items-center min-h-screen fixed bg-cyan-300">
     <div className="flex flex-col p-3 ">
       <Link onMouseEnter={() => {
         linkValues.createOKR = true;
