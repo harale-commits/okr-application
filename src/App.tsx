@@ -9,7 +9,7 @@ import {NavBar} from "./components/NavBar.tsx";
 
 function App() {
   const {objectives, setObjectives} = useContext(okrProviderContext);
-  const [isUpdateObjectiveFormOpen, setIsUpdateObjectiveFormOpen] =
+  const [isUpdateFormOpen, setIsUpdateFormOpen] =
     useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(objectives === null)
 
@@ -30,14 +30,14 @@ function App() {
       <Routes>
 
         <Route path="/okrForm" element={<CreateOKRForm
-          isUpdateObjectiveFormOpen={isUpdateObjectiveFormOpen}
-          setIsUpdateObjectiveFormOpen={setIsUpdateObjectiveFormOpen}
+          isUpdateObjectiveFormOpen={isUpdateFormOpen}
+          setIsUpdateObjectiveFormOpen={setIsUpdateFormOpen}
         />}/>
 
 
         <Route path="/displayOkrForm" element={<ShowOKRForm
-          isUpdateObjectiveFormOpen={isUpdateObjectiveFormOpen}
-          setIsUpdateObjectiveFormOpen={setIsUpdateObjectiveFormOpen}
+          isUpdateObjectiveFormOpen={isUpdateFormOpen}
+          setIsUpdateObjectiveFormOpen={setIsUpdateFormOpen}
         />}/>
 
       </Routes>
