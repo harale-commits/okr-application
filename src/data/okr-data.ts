@@ -1,44 +1,51 @@
-import { InsertOKRObjectiveType, ObjectiveType } from "../types/okr-types";
-import { v4 as uuidv4 } from "uuid";
+import {InsertOKRObjectiveType, ObjectiveType} from "../types/okr-types";
 
-let db = new Map<string, ObjectiveType>();
+export const insertOKRObjectives = async (
+  newOKR: InsertOKRObjectiveType
+) => {
 
-let OKRObjectives: ObjectiveType[] = [
-  {
-    id: uuidv4(),
-    title: "Hire Devs",
-    keyresults: [
-      {
-        title: "Hire 5 Backend Devs",
-        initialValue: 0,
-        currentValue: 2,
-        targetValue: 5,
-        metrics: "Devs",
-      },
-    ],
-  },
-];
 
-OKRObjectives.forEach((objective) => {
-  db.set(objective.id, objective);
-});
+  const objectiveWithoutKeyResults = {title: newOKR.title};
+  const keyResultsArray = newOKR.keyResults;
 
-export const insertOKRObjectives = (newOKR: InsertOKRObjectiveType): Promise<ObjectiveType> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const newObjectiveID = uuidv4();
-      const newOKRToBeAddedInDB = { id: newObjectiveID, ...newOKR };
-      console.log(newOKRToBeAddedInDB);
-      db.set(uuidv4(), newOKRToBeAddedInDB);
-      resolve(newOKRToBeAddedInDB);
-    }, 3000);
+
+  const objectiveResponse = await fetch("http://localhost:3000/objectives", {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(objectiveWithoutKeyResults),
   });
+
+  const data = await objectiveResponse.json();
+  const responseID = data.id;
+
+  for (let i = 0; i < keyResultsArray.length; i++) {
+    keyResultsArray[i].objectiveID = responseID;
+  }
+
+  await fetch("http://localhost:3000/keyresults", {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(keyResultsArray)
+
+  })
+
+  return getOKRObjectives();
+
 };
 
-export const getOKRObjectives = (): Promise<ObjectiveType[]> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(Array.from(db.values()));
-    }, 3000);
-  });
+export const getOKRObjectives = async (): Promise<ObjectiveType[]> => {
+  const responseOKR = await fetch("http://localhost:3000/objectives/keyresults");
+  return await responseOKR.json();
 };
+
+export const deleteOkrfromdb = async (id: string): Promise<ObjectiveType> => {
+  const response = await fetch(`http://localhost:3000/objectives/${id}`, {
+    method: "DELETE",
+  });
+  return await response.json()
+}
+

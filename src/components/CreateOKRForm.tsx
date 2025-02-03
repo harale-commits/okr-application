@@ -1,8 +1,9 @@
-import { useState } from "react";
-import { KeyResultType, ObjectiveType } from "../types/okr-types";
+import  {useContext, useState} from "react";
+import { KeyResultType } from "../types/okr-types";
 import { insertOKRObjectives } from "../data/okr-data";
 import ObjectiveForm from "./ObjectiveForm";
 import KeyResultForm from "./KeyResultForm";
+import {okrProviderContext} from "../providers/OkrProvider.tsx";
 
 const emptyKeyResult = {
   title: "",
@@ -13,17 +14,17 @@ const emptyKeyResult = {
 };
 
 type CreateOKRFormPropType = {
-  objectives: ObjectiveType[];
-  setObjectives: React.Dispatch<React.SetStateAction<ObjectiveType[] | null>>;
   isUpdateObjectiveFormOpen: boolean;
   setIsUpdateObjectiveFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function CreateOKRForm({
-  objectives,
-  setObjectives,
-  isUpdateObjectiveFormOpen,
-}: CreateOKRFormPropType) {
+
+export default function CreateOKRForm({ isUpdateObjectiveFormOpen,
+                                        setIsUpdateObjectiveFormOpen} : CreateOKRFormPropType ) {
+
+
+  const {objectives, setObjectives} = useContext(okrProviderContext);
+
   const [newObjective, setNewObjective] = useState<string>("");
 
   const [keyResults, setKeyResults] = useState<KeyResultType[]>([
@@ -40,11 +41,10 @@ export default function CreateOKRForm({
   const addObjectives = () => {
     const newOKR = {
       title: newObjective,
-      keyresults: [...keyResults],
+      keyResults: [...keyResults],
     };
     insertOKRObjectives(newOKR).then((data) => {
-      setObjectives([...objectives, data]);
-
+      setObjectives(data);
       resetKeyResults();
       resetNewObjectiveValue();
     });
@@ -58,8 +58,10 @@ export default function CreateOKRForm({
     <div
       className={`${
         isUpdateObjectiveFormOpen ? "inset-0 fixed  bg-black bg-opacity-25" : ""
-      } border px-4 py-8 max-w-3xl mx-auto space-y-10 `}
+      } border px-4 py-8 max-w-3xl mx-auto space-y-10 mt-24 `}
     >
+
+
       <h1 className="uppercase text-3xl font-bold font-mono	 text-center">
         Create Objective Form
       </h1>
@@ -71,8 +73,10 @@ export default function CreateOKRForm({
           Key Results
         </label>
         {keyResults.map((keyResult, index) => (
-          <KeyResultForm index={index} keyResult={keyResult} setKeyResults={setKeyResults} keyResults={keyResults}/>
+          <KeyResultForm index={index} keyResult={keyResult} setKeyResults={setKeyResults} keyResults={keyResults} key={index}/>
         ))}
+
+
         <div className="max-w-xl">
           <button
             className={
@@ -83,6 +87,8 @@ export default function CreateOKRForm({
             Add Key Result
           </button>
         </div>
+
+
       </div>
 
       <div className="max-w-xl mx-auto pt-6">
@@ -95,6 +101,8 @@ export default function CreateOKRForm({
           <span>Add Objective</span>
         </button>
       </div>
+
+
     </div>
   );
 }
